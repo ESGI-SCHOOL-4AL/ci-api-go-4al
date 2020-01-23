@@ -18,6 +18,7 @@ jobs:
 
     - name: Get dependencies
       run: |
+        echo "::add-path::$GOROOT/bin"
         go get golang.org/x/lint/golint
         go get github.com/rakyll/gotest
         go get -v -t -d ./...
