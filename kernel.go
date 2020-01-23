@@ -3,6 +3,7 @@ package main
 import (
 	_ "ci-api-go-4al/http/request"
 	"ci-api-go-4al/http/route"
+	"fmt"
 
 	"github.com/System-Glitch/goyave/v2"
 	// Import the approriate GORM dialect for the database you're using.
@@ -18,5 +19,9 @@ func main() {
 	// if you are running multiple services, such as a
 	// websocket server, you'll need to run Goyave in a routine.
 	// See: https://system-glitch.github.io/goyave/guide/advanced/multi-services.html
+	goyave.RegisterStartupHook(func() {
+		fmt.Println("Pute")
+	})
 	goyave.Start(route.Register)
+
 }

@@ -1,8 +1,7 @@
 package route
 
 import (
-	"ci-api-go-4al/http/controller/hello"
-	"ci-api-go-4al/http/request/echorequest"
+	"ci-api-go-4al/http/controller/text"
 
 	"github.com/System-Glitch/goyave/v2"
 	"github.com/System-Glitch/goyave/v2/cors"
@@ -26,8 +25,13 @@ func Register(router *goyave.Router) {
 	// Register your routes here
 
 	// Route without validation
-	router.Route("GET", "/hello", hello.SayHi, nil)
+	// router.Route("GET", "/hello", hello.SayHi, nil)
 
 	// Route with validation
-	router.Route("GET", "/echo", hello.Echo, echorequest.Echo)
+	// router.Route("GET", "/echo", hello.Echo, echorequest.Echo)
+	router.Route("GET", "/text", text.GetText, nil)
+	router.Route("POST", "/text", text.AddText, nil)
+
+	router.Route("GET", "/text/{id:[0-9]+}", text.GetTextById, nil)
+	router.Route("PUT", "/text/{id:[0-9]+}", text.ModifyTextById, nil)
 }
