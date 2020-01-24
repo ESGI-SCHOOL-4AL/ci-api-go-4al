@@ -29,9 +29,10 @@ func Register(router *goyave.Router) {
 
 	// Route with validation
 	// router.Route("GET", "/echo", hello.Echo, echorequest.Echo)
-	router.Route("GET", "/text", text.GetText, nil)
-	router.Route("POST", "/text", text.AddText, nil)
+	router.Route("GET", "/text", text.Index, nil)
+	router.Route("POST", "/text", text.Store, nil)
 
-	router.Route("GET", "/text/{id:[0-9]+}", text.GetTextById, nil)
-	router.Route("PUT", "/text/{id:[0-9]+}", text.ModifyTextById, nil)
+	router.Route("GET", "/text/{id:[0-9]+}", text.Show, nil)
+	router.Route("PUT", "/text/{id:[0-9]+}", text.Update, nil)
+	router.Route("DELETE", "/text/{id:[0-9]+}", text.Destroy, nil)
 }
