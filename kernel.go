@@ -3,9 +3,12 @@ package main
 import (
 	_ "ci-api-go-4al/http/request"
 	"ci-api-go-4al/http/route"
+
 	"fmt"
 
 	"github.com/System-Glitch/goyave/v2"
+	_ "github.com/System-Glitch/goyave/v2/validation"
+
 	// Import the approriate GORM dialect for the database you're using.
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	// _ "github.com/jinzhu/gorm/dialects/postgres"

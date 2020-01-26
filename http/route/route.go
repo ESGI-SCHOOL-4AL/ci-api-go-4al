@@ -2,6 +2,7 @@ package route
 
 import (
 	"ci-api-go-4al/http/controller/text"
+	"ci-api-go-4al/http/request/textrequest"
 
 	"github.com/System-Glitch/goyave/v2"
 	"github.com/System-Glitch/goyave/v2/cors"
@@ -30,9 +31,9 @@ func Register(router *goyave.Router) {
 	// Route with validation
 	// router.Route("GET", "/echo", hello.Echo, echorequest.Echo)
 	router.Route("GET", "/text", text.Index, nil)
-	router.Route("POST", "/text", text.Store, nil)
+	router.Route("POST", "/text", text.Store, textrequest.Store)
 
 	router.Route("GET", "/text/{id:[0-9]+}", text.Show, nil)
-	router.Route("PUT", "/text/{id:[0-9]+}", text.Update, nil)
+	router.Route("PUT", "/text/{id:[0-9]+}", text.Update, textrequest.Store)
 	router.Route("DELETE", "/text/{id:[0-9]+}", text.Destroy, nil)
 }
