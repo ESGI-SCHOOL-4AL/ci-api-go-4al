@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/System-Glitch/goyave/v2/database"
+	"github.com/bxcodec/faker/v3"
 	"github.com/jinzhu/gorm"
 )
 
@@ -12,6 +13,16 @@ func init() {
 
 type Text struct {
 	gorm.Model
-	Title   string `gorm:"type:varchar(100)"`
-	Content string `gorm:"type:varchar(100)"`
+	Title   string `gorm:"type:varchar(255)"`
+	Content string `gorm:"type:varchar(25555)"`
+}
+
+func TextGenerator() interface{} {
+	text := &Text{}
+
+	text.Title = faker.Name()
+
+	text.Content = faker.Name()
+
+	return text
 }
