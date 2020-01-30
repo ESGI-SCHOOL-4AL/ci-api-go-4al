@@ -13,8 +13,8 @@ func init() {
 
 type Text struct {
 	gorm.Model
-	Title   string `gorm:"type:varchar(255)"`
-	Content string `gorm:"type:varchar(25555)"`
+	Title   string `gorm:"type:varchar(100)"`
+	Content string `gorm:"type:text"`
 }
 
 func TextGenerator() interface{} {
@@ -22,7 +22,7 @@ func TextGenerator() interface{} {
 
 	text.Title = faker.Name()
 
-	text.Content = faker.Name()
+	text.Content = faker.Paragraph()
 
 	return text
 }

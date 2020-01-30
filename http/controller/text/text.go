@@ -17,7 +17,7 @@ func Store(response *goyave.Response, request *goyave.Request) {
 	}
 
 	database.GetConnection().Create(&text)
-	response.Status(http.StatusCreated)
+	response.JSON(http.StatusCreated, map[string]interface{}{"id": text.ID})
 }
 
 func Index(response *goyave.Response, request *goyave.Request) {

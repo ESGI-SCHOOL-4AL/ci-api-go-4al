@@ -23,7 +23,7 @@ func main() {
 	// websocket server, you'll need to run Goyave in a routine.
 	// See: https://system-glitch.github.io/goyave/guide/advanced/multi-services.html
 	goyave.RegisterStartupHook(func() {
-		fmt.Println("Pute")
+		fmt.Println("Server started.")
 	})
 	goyave.Start(route.Register)
 
