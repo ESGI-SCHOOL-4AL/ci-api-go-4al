@@ -24,6 +24,18 @@ jobs:
         go get github.com/rakyll/gotest
         go get -v -t -d ./...
 
+    - name: Verify MySQL connection
+      run: |
+        while ! mysqladmin ping --silent; do
+          sleep 1
+        done
+
+    - name: Setup MySQL database
+      run: |
+        sudo mysql -proot -e 'CREATE DATABASE goyave CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'
+        sudo mysql -proot -e 'CREATE USER "goyave"@"%" IDENTIFIED BY "secret"'
+        sudo mysql -proot -e 'GRANT ALL PRIVILEGES ON goyave.* TO "goyave"@"%"'
+
     - name: Test
       run: |
         gotest -v -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./... ./...
