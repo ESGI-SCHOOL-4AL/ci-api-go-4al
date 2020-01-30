@@ -1,0 +1,34 @@
+version: '3'
+services:
+    api:
+        image: docker.systemglitch.me/systemglitch/notepad:latest
+        restart: always
+        networks:
+            - notepad-backend
+        ports:
+            - '8084:80'
+        depends_on:
+            - mariadb
+    mariadb:
+        image: mariadb
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: notepad
+            MYSQL_USER: notepad
+            MYSQL_PASSWORD: secret
+        networks:
+            - notepad-backend
+        
+        restart: on-failure
+        volumes:
+            - databaseVolume:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", 'mysqladmin ping'] 
+            interval: 10s
+            timeout: 10s
+            retries: 20                
+volumes:
+    databaseVolume: {}
+networks:
+    notepad-backend:
+        driver: bridge
