@@ -1,0 +1,45 @@
+name: Deploy
+on:
+ pull_request:
+   types: [closed]
+   branches:
+     - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: systemglitch/notepad
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+        dockerfile: Dockerfile
+        registry: docker.systemglitch.me
+        tags: "latest"
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Deploy docker-compose
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          port: ${{ secrets.PORT }}
+          source: "./docker-compose.yml"
+          target: "/var/www/html/notepad"
+      - name: Update service
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /var/www/html/notepad
+            docker-compose pull
+            docker-compose up -d --force-recreate api
