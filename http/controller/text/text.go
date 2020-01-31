@@ -10,34 +10,46 @@ import (
 	"github.com/System-Glitch/goyave/v2"
 )
 
+// Store create a new text record.
 func Store(response *goyave.Response, request *goyave.Request) {
 	text := model.Text{
 		Title:   request.String("title"),
 		Content: request.String("content"),
 	}
 
-	database.GetConnection().Create(&text)
-	response.JSON(http.StatusCreated, map[string]interface{}{"id": text.ID})
+	if err := database.GetConnection().Create(&text).Error; err != nil {
+		response.Error(err)
+	} else {
+		response.JSON(http.StatusCreated, map[string]interface{}{"id": text.ID})
+	}
 }
 
+// Index list all records.
 func Index(response *goyave.Response, request *goyave.Request) {
 	texts := []model.Text{}
 
-	database.GetConnection().Find(&texts)
-	response.JSON(http.StatusOK, texts)
+	if err := database.GetConnection().Find(&texts).Error; err != nil {
+		response.Error(err)
+	} else {
+		response.JSON(http.StatusOK, texts)
+	}
 }
 
+// Show a single record
 func Show(response *goyave.Response, request *goyave.Request) {
 	text := model.Text{}
 	id, _ := strconv.ParseUint(request.Params["id"], 10, 64)
-
-	if database.GetConnection().First(&text, id).RecordNotFound() {
+	result := database.GetConnection().First(&text, id)
+	if result.RecordNotFound() {
 		response.Status(http.StatusNotFound)
+	} else if err := result.Error; err != nil {
+		response.Error(err)
 	} else {
 		response.JSON(http.StatusOK, text)
 	}
 }
 
+// Update a record.
 func Update(response *goyave.Response, request *goyave.Request) {
 	text := model.Text{}
 	id, _ := strconv.ParseUint(request.Params["id"], 10, 64)
@@ -46,13 +58,18 @@ func Update(response *goyave.Response, request *goyave.Request) {
 	if db.Select("id").First(&text, id).RecordNotFound() {
 		response.Status(http.StatusNotFound)
 	} else {
-		db.Model(&text).Update(model.Text{
+		err := db.Model(&text).Update(model.Text{
 			Title:   request.String("title"),
 			Content: request.String("content"),
-		})
+		}).Error
+
+		if err != nil {
+			response.Error(err)
+		}
 	}
 }
 
+// Destroy a record.
 func Destroy(response *goyave.Response, request *goyave.Request) {
 	text := model.Text{}
 	id, _ := strconv.ParseUint(request.Params["id"], 10, 64)
@@ -60,7 +77,7 @@ func Destroy(response *goyave.Response, request *goyave.Request) {
 	db := database.GetConnection()
 	if db.Select("id").First(&text, id).RecordNotFound() {
 		response.Status(http.StatusNotFound)
-	} else {
-		db.Delete(&text)
+	} else if err := db.Delete(&text).Error; err != nil {
+		response.Error(err)
 	}
 }

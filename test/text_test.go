@@ -20,7 +20,9 @@ type TextTestSuite struct { // Create a test suite for the Hello controller
 }
 
 func (suite *TextTestSuite) SetupTest() {
-	seeder.Text()
+	if database.GetConnection().HasTable(&model.Text{}) {
+		seeder.Text()
+	}
 }
 
 func (suite *TextTestSuite) TearDownTest() {
