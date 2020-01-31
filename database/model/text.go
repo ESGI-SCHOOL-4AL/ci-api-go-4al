@@ -11,18 +11,17 @@ func init() {
 	database.RegisterModel(&Text{})
 }
 
+// Text a notepad record containing a title and a text content.
 type Text struct {
 	gorm.Model
 	Title   string `gorm:"type:varchar(100)"`
 	Content string `gorm:"type:text"`
 }
 
+// TextGenerator generate a single record of the Text model.
 func TextGenerator() interface{} {
-	text := &Text{}
-
-	text.Title = faker.Name()
-
-	text.Content = faker.Paragraph()
-
-	return text
+	return &Text{
+		Title:   faker.Name(),
+		Content: faker.Paragraph(),
+	}
 }
