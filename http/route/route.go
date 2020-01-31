@@ -1,8 +1,8 @@
 package route
 
 import (
-	"ci-api-go-4al/http/controller/hello"
-	"ci-api-go-4al/http/request/echorequest"
+	"ci-api-go-4al/http/controller/text"
+	"ci-api-go-4al/http/request/textrequest"
 
 	"github.com/System-Glitch/goyave/v2"
 	"github.com/System-Glitch/goyave/v2/cors"
@@ -23,11 +23,14 @@ func Register(router *goyave.Router) {
 	// Learn more about CORS options here: https://system-glitch.github.io/goyave/guide/advanced/cors.html
 	router.CORS(cors.Default())
 
-	// Register your routes here
+	router.Route("GET", "/robots.txt", func(resp *goyave.Response, req *goyave.Request) {
+		resp.File("resources/robots.txt")
+	}, nil)
 
-	// Route without validation
-	router.Route("GET", "/hello", hello.SayHi, nil)
+	router.Route("GET", "/text", text.Index, nil)
+	router.Route("POST", "/text", text.Store, textrequest.Store)
 
-	// Route with validation
-	router.Route("GET", "/echo", hello.Echo, echorequest.Echo)
+	router.Route("GET", "/text/{id:[0-9]+}", text.Show, nil)
+	router.Route("PUT", "/text/{id:[0-9]+}", text.Update, textrequest.Store)
+	router.Route("DELETE", "/text/{id:[0-9]+}", text.Destroy, nil)
 }
