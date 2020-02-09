@@ -1,0 +1,37 @@
+version: '3'
+services:
+    api:
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        restart: always
+        networks:
+            - notepad-backend
+        ports:
+            - '8080:8080'
+        depends_on:
+            - mariadb
+        volumes:
+            - .:/app
+    mariadb:
+        image: mariadb
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: notepad
+            MYSQL_USER: notepad
+            MYSQL_PASSWORD: secret
+        networks:
+            - notepad-backend
+        restart: on-failure
+        volumes:
+            - databaseVolume:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", 'mysqladmin ping'] 
+            interval: 10s
+            timeout: 10s
+            retries: 20                
+volumes:
+    databaseVolume: {}
+networks:
+    notepad-backend:
+        driver: bridge
