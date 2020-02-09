@@ -26,5 +26,5 @@ func main() {
 		fmt.Println("Server started.")
 	})
 	goyave.Start(route.Register)
-
+	fmt.Println("Server shutdown.")
 }
